@@ -23,32 +23,122 @@
         }
 
         .searchResult{
-            margin-top: -0.75rem !important;
+            margin-top: 0 !important;
+        }
+
+        .searchResult .data_box{
+            position: relative;
         }
 
         .checkbox{
             background-color: white;
             width: 90vw;
-            height: 2.5rem;
+            display: none;
+        }
+
+        .checkbox .merge_share,.selectAll{
+            width: 90%;
+            margin: 0 auto;
             display: flex;
             align-items: center;
         }
 
-        .checkbox .checkbox_img{
+        .checkbox .merge_share .checkbox_img{
             width: 1.3125rem;
             height: .9375rem;
+            margin-top: .1875rem;
         }
 
-        .checkbox .checkbox_img img{
+        .checkbox .selectAll .checkbox_img{
+            width: 1.125rem;
+            height: 1.125rem;
+            margin-right: .5rem;
+        }
+
+        img{
             width: 100%;
             height: 100%;
         }
 
-        .checkbox .transmit{
+        .checkbox .merge_share .transmit{
             font-family: SourceHanSansCN;
             font-weight: 500;
             font-size: 1rem;
             color: #373737;
+        }
+
+        .checkbox .selectAll .transmit{
+            font-family: SourceHanSansCN;
+            font-weight: 400;
+            font-size: 1rem;
+            color: #BCBCBC;
+        }
+
+        /* 蒙板 */
+        .mask{
+            position: absolute;
+            width: 80vw;
+            height: 38.8vw;
+            margin: 1rem 0;
+            top: 0;
+            z-index: 10;
+            display: none;
+        }
+
+        .check_icon_box{
+            width: 1.3125rem;
+            height: 1.3125rem;
+            margin-top: .5625rem;
+            margin-left: .75rem;
+        }
+
+        .check_icon_box img{
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 隐藏原生多选框 */
+        input[type="checkbox"] {
+            display: none;
+        }
+
+        .hidden{
+            display: none !important;
+        }
+
+        .footer{
+            width: 90vw;
+            background-color: white;
+            border-bottom-left-radius: .5rem;
+            border-bottom-right-radius: .5rem;
+            margin-bottom: 1.25rem;
+            padding: .625rem 0;
+        }
+
+        .share_box{
+            margin: 0 auto;
+
+            background: #FFD500;
+            width: 9.0625rem;
+            height: 2.5rem;
+            border-radius: .5rem;
+
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+
+        .share_icon{
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: .375rem;
+        }
+
+        .share{
+            font-family: SourceHanSansCN;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #000000;
         }
     </style>
 </head>
@@ -67,11 +157,27 @@
             </div>
         </div>
         <div class="checkbox">
-            <span class="checkbox_img"><img src="./assets/checkbox.png" alt="" srcset=""></span>
-            <span class="transmit">合并转发</span>
+            <div class="merge_share">
+                <span class="checkbox_img"><img src="./assets/checkbox.png" alt="" srcset=""></span>
+                <span class="transmit">合并转发</span>
+            </div>
+            <div class="selectAll hidden">
+                <span class="checkbox_img"><img src="./assets/selects.png" alt="" srcset=""></span>
+                <span class="transmit">全选</span>
+            </div>
         </div>
         <div class="searchResult">
         </div>
+
+        <div class="footer">
+            <div class="share_box" onclick="share()">
+                <div class="share_icon">
+                    <img src="./assets/share.png" alt="" srcset="">
+                </div>
+                <div class="share">转发</div>
+            </div>
+        </div>
+        
     </div>
     <div class="container">
         <div class="header">
@@ -171,13 +277,14 @@ function highlightTarget(){
 }
 
 function updateSearch(keyword) {
-    if(keyword===''){return}
+    // if(keyword===''){return}
     $('.searchResult').empty()
     $.ajax({
         type:'POST',
         url:'https://news.lego.cn/v/news/search',
         data:JSON.stringify({
-            title:keyword
+            // title:keyword
+            title:'乐高'
         }),
         success:function(e){
             if(e.code===1000){
@@ -186,11 +293,14 @@ function updateSearch(keyword) {
                     //没有结果
                     $('.searchResult').append('<div style="color:#666" class="searchTip">没有搜到相关文章</div>')
                 }else{
+                    // 搜到文章后添加样式
                     $('.searchMain').css('background-image', 'url(./assets/not_select_back.png)')    
                     $('.searchMain').css('background-size', 'cover')    
                     $('.searchMain').css('background-attachment', 'fixed')   
-                    
+                    // 确定按钮样式
                     $('.searchEnsure').addClass('submit')
+                    // 展示合并转发
+                    $('.checkbox').css('display', 'block')
 
                     searchRes = e.data.list
                     console.log("searchRes", searchRes)
@@ -280,7 +390,6 @@ window.onscroll = function(){
                             $('.content').append(genCardS(e.data.list[i]))
                        }
                       getting=false
-
                    }
                }
            },
@@ -292,12 +401,39 @@ window.onscroll = function(){
 }
 function genCardS(data){
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
-    return $('<a href="./article?aid='+data.ID+'"><div class="list-item"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a>')
+    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"><img src="./assets/unchecked.png" class="unchecked'+data.id+'"> <img src="./assets/checked.png" class="checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox'+data.id+'" /> </div> </div> </div>')
 }
 function genCard(data){
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
-    return $('<a href="./article?aid='+data.ID+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a>')
+    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"> <img src="./assets/unchecked.png" class="unchecked'+data.id+'"> <img src="./assets/checked.png" class="checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox'+data.id+'" /> </div> </div></div>')
 }
+
+// 点击合并转发
+$('.checkbox').on('click', function () {
+    $('.searchMain').css('background-image', 'url(./assets/select_back.png)')    
+    $('.mask').css('display', 'block')
+    $('.merge_share').toggleClass('hidden')
+    $('.selectAll').toggleClass('hidden')
+
+    $('.share_box').css('display', 'flex')
+})
+
+// 选中文章
+function handleClick(id){
+    $('.unchecked'+id).toggleClass('hidden');
+    $('.checked'+id).toggleClass('hidden');
+
+    $('.checkbox'+id).prop('checked', !$('.checkbox'+id).prop('checked'));
+}
+
+// 转发
+function share(){
+ // 获取所有选中的id
+    $('input[name="check"]:checked').each(function() {
+        console.log($(this).val());
+    });
+}
+
 </script>
 </body>
 </html>
