@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://lego.chic-mkt.com/minisite/lib/img/favicon.ico">
+  <script src="https://lego.chic-mkt.com/minisite/lib/js/jquery-3.5.1.min.js"></script>
+  <script src="https://lego.chic-mkt.com/minisite/lib/js/jweixin-1.4.0.js"></script>
+  <script>
+    function getQueryString(name) {
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.href) || [window.location.href, ""])[1].replace(/\+/g, '%20')) || null
+    }
+  </script>
+    <link rel="stylesheet" href="https://lego.chic-mkt.com/news/assets/css/news_index.css" />
+    <title>乐高集团新闻中心</title>
+
+    <style>
+        .submit{
+            background: black !important;
+            color: white !important;
+            border-radius: .5rem !important;
+        }
+
+        .searchResult{
+            margin-top: -0.75rem !important;
+        }
+
+        .checkbox{
+            background-color: white;
+            width: 90vw;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox .checkbox_img{
+            width: 1.3125rem;
+            height: .9375rem;
+        }
+
+        .checkbox .checkbox_img img{
+            width: 100%;
+            height: 100%;
+        }
+
+        .checkbox .transmit{
+            font-family: SourceHanSansCN;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #373737;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://lego.chic-mkt.com/news/assets/lib/swiper.js"> </script>
+    <!-- =======================h5=================================== -->
+    <link rel="stylesheet" href="https://lego.chic-mkt.com/news/assets/css/news_index_h5.css" />
+    <div class="searchMainBg" style="display: none;" >
+        <div class="searchMain">
+            <div class="searchInputBox">
+                <input type="text" class="searchInp icon-search" id="searchInp" placeholder="&#xe986&nbsp请输入关键字搜索">
+            </div>
+            <div class="searchMainBtnBox" style="margin-top: 1.5rem!important">
+                <div class="searchCancel">取消</div>
+                <div class="searchEnsure">确认</div>
+            </div>
+        </div>
+        <div class="checkbox">
+            <span class="checkbox_img"><img src="./assets/checkbox.png" alt="" srcset=""></span>
+            <span class="transmit">合并转发</span>
+        </div>
+        <div class="searchResult">
+        </div>
+    </div>
+    <div class="container">
+        <div class="header">
+            <img src="https://lego.chic-mkt.com/news/assets/static/logo.jpg" alt="" class="logo">
+            <div class="main-title">乐高集团新闻中心</div>
+            <div class="btn-box">
+            </div>
+        </div>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                        <a href="" class="lunboA">
+                            <img src="https://lego.chic-mkt.com/playbox/TID84/Upload/45dde62b-3371-4713-9751-838cba9ba794.jpg" class="boImg">
+                            <div class="titleBox">
+                                    <span class="title">标题</span>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="searchBtnBox">
+            <div class="searchBtn">
+                <div class="icon-search">&#xe986</div>
+                <div class="searchWord">请输入关键字搜索</div>
+            </div>
+        </div>
+        <div class="news-menu">
+                     <a href="">
+                        <div class="news-cl target">标题</div>
+                     </a>
+                    <a href="">
+                        <div class="news-cl">标题</div>
+                     </a>
+        </div>
+        <div class="content">
+            <a href="">
+                <div class="list-item">
+                    <img src="https://lego.chic-mkt.com/playbox/TID84/Upload/45dde62b-3371-4713-9751-838cba9ba794.jpg" alt="" class="item-img">
+                    <div class="item-info">
+                        <div style="font-size:0.8rem">标题</div>
+                        <div>标题</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div style="color:#999;width:90%;display:flex;flex-direction: column;align-items: center;font-size:0.6rem;margin-top:10vw;margin-bottom:2rem">
+            <div>媒体垂询，请发送邮件至 CNCorpComms@LEGO.com</div>
+            <div>LEGO，乐高和LEGO标识均为乐高集团的商标。</div>
+            <div>2024乐高集团著作权所有。</div>
+        </div>
+    </div>
+<script>
+let searchRes = []
+let searchHasMore = false
+let searchAppending = false
+
+var swiper = new Swiper('.swiper-container', {
+    loop:true,
+    pagination: {
+        el: '.swiper-pagination',
+    },
+});
+handleSearch()
+function handleSearch() {
+    $('.searchBtn').on('click', function () {
+        $('.searchMainBg').css('display', 'flex')
+        $('.searchMainPlacehoder').css('display', 'flex')
+        document.body.style.position='fixed'
+    })
+    $('.searchCancel').on('click', function () {
+        $('.searchMainBg').css('display', 'none')
+        $('.searchInp').val('')
+        $('.searchMainPlacehoder').css('display', 'flex')
+        $('.searchResult').empty()
+        searchRes=[]
+        document.body.style.position='static'
+
+    })
+    $('.searchEnsure').on('click', function () {
+        let keyWords = $('.searchInp').val()
+        console.log('搜索');
+        updateSearch(keyWords)
+    })
+}
+function getQueryString (name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.href) || [window.location.href, ""])[1].replace(/\+/g, '%20')) || null
+}
+// highlightTarget()
+function highlightTarget(){
+    let url = getQueryString('cid')-1
+	if(!url){
+		$('.news-cl').eq(0).addClass('target')
+	}else{
+		$('.news-cl').eq(url).addClass('target')
+	}
+}
+
+function updateSearch(keyword) {
+    if(keyword===''){return}
+    $('.searchResult').empty()
+    $.ajax({
+        type:'POST',
+        url:'https://news.lego.cn/v/news/search',
+        data:JSON.stringify({
+            title:keyword
+        }),
+        success:function(e){
+            if(e.code===1000){
+                //获得数据
+                if(e.data.list.length===0){
+                    //没有结果
+                    $('.searchResult').append('<div style="color:#666" class="searchTip">没有搜到相关文章</div>')
+                }else{
+                    $('.searchMain').css('background-image', 'url(./assets/not_select_back.png)')    
+                    $('.searchMain').css('background-size', 'cover')    
+                    $('.searchMain').css('background-attachment', 'fixed')   
+                    
+                    $('.searchEnsure').addClass('submit')
+
+                    searchRes = e.data.list
+                    console.log("searchRes", searchRes)
+                    if(searchRes.length>8){
+                        for (let i=0;i<8;i++) {
+                            let dom = genCard(searchRes[i])
+                            $('.searchResult').append(dom)
+                        }
+                        searchHasMore=true
+                    }else{
+                        for (let i in searchRes) {
+                            let dom = genCard(searchRes[i])
+                            $('.searchResult').append(dom)
+                        }
+                        searchHasMore=false
+                    }
+                }
+            }
+        },
+        error:function(){
+            $('.searchResult').append('<div style="color:#666" class="searchTip">网络错误,请重试</div>')
+        }
+    })
+}
+$('.searchResult')[0].onscroll = function(){
+  if(!searchHasMore){return}
+  if(searchAppending){return}
+  var scrollTop = $('.searchResult')[0].scrollTop
+  var windowHeight = $('.searchResult')[0].clientHeight
+  var scrollHeight = $('.searchResult')[0].scrollHeight||document.body.scrollHeight;
+  if(scrollTop+windowHeight > scrollHeight-200){
+    let offset = $('.searchResult').children().length
+    if(searchRes.length-offset>8){
+        searchAppending=true
+        for(let i=offset;i<offset+8;i++){
+            $('.searchResult').append(genCard(searchRes[i]))
+        }
+        searchAppending=false
+    }else if(searchRes.length-offset>0){
+        searchAppending=true
+        for(let i=offset;i<searchRes.length;i++){
+            $('.searchResult').append(genCard(searchRes[i]))
+        }
+        searchAppending=false
+    }
+  }
+}
+
+
+
+$('.searchMainBg').on('touchmove', function (e) {
+    e.stopPropagation()
+})
+let getting =false
+let num = 1;
+window.onscroll = function(){
+  if(getting){return}
+  //scrollTop是滚动条滚动时，距离顶部的距离
+  var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+  //windowHeight是可视区的高度
+  var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+  //scrollHeight是滚动条的总高度
+  var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+  //滚动条到底部的条件
+  //console.log(scrollTop+windowHeight , scrollHeight)
+  if(scrollTop+windowHeight > scrollHeight-200){
+    getting=true
+    let offset = $('.content').children().length
+    num = num + 1
+    let cid = getQueryString('cid')
+    if (!cid){
+        cid = 0
+    }
+       $.ajax({
+           type:'GET',
+           url:'./list-more?page='+num+'&pageSize=5&cid='+cid,
+           success:function(e){
+               //console.log(e)
+               if(e.code===1000){
+                   //获得数据
+                   if(e.data.list.length===0){
+                       //没有结果
+                       //$('.searchResult').append('<div style="color:#666" class="searchTip">没有搜到相关文章</div>')
+                       getting =true
+                   }else{
+                       for(let i=0;i<e.data.list.length;i++){
+                            $('.content').append(genCardS(e.data.list[i]))
+                       }
+                      getting=false
+
+                   }
+               }
+           },
+           error:function(){
+                getting=false
+           }
+       })
+  }
+}
+function genCardS(data){
+    let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
+    return $('<a href="./article?aid='+data.ID+'"><div class="list-item"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a>')
+}
+function genCard(data){
+    let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
+    return $('<a href="./article?aid='+data.ID+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a>')
+}
+</script>
+</body>
+</html>
