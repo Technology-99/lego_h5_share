@@ -30,26 +30,26 @@
             position: relative;
         }
 
-        .checkbox{
+        .checkbox_share{
             background-color: white;
             width: 90vw;
             display: none;
         }
 
-        .checkbox .merge_share,.selectAll{
+        .checkbox_share .merge_share,.selectAll{
             width: 90%;
             margin: 0 auto;
             display: flex;
             align-items: center;
         }
 
-        .checkbox .merge_share .checkbox_img{
+        .checkbox_share .merge_share .checkbox_img{
             width: 1.3125rem;
             height: .9375rem;
             margin-top: .1875rem;
         }
 
-        .checkbox .selectAll .checkbox_img{
+        .checkbox_share .selectAll .checkbox_img{
             width: 1.125rem;
             height: 1.125rem;
             margin-right: .5rem;
@@ -60,14 +60,14 @@
             height: 100%;
         }
 
-        .checkbox .merge_share .transmit{
+        .checkbox_share .merge_share .transmit{
             font-family: SourceHanSansCN;
             font-weight: 500;
             font-size: 1rem;
             color: #373737;
         }
 
-        .checkbox .selectAll .transmit{
+        .checkbox_share .selectAll .transmit{
             font-family: SourceHanSansCN;
             font-weight: 400;
             font-size: 1rem;
@@ -113,6 +113,7 @@
             border-bottom-right-radius: .5rem;
             margin-bottom: 1.25rem;
             padding: .625rem 0;
+            display: none;
         }
 
         .share_box{
@@ -122,10 +123,9 @@
             width: 9.0625rem;
             height: 2.5rem;
             border-radius: .5rem;
-
+            display: flex;
             align-items: center;
             justify-content: center;
-            display: none;
         }
 
         .share_icon{
@@ -156,7 +156,7 @@
                 <div class="searchEnsure">确认</div>
             </div>
         </div>
-        <div class="checkbox">
+        <div class="checkbox_share">
             <div class="merge_share">
                 <span class="checkbox_img"><img src="./assets/checkbox.png" alt="" srcset=""></span>
                 <span class="transmit">合并转发</span>
@@ -170,12 +170,12 @@
         </div>
 
         <div class="footer">
-            <div class="share_box" onclick="share()">
+            <a class="share_box" onclick="share()">
                 <div class="share_icon">
                     <img src="./assets/share.png" alt="" srcset="">
                 </div>
                 <div class="share">转发</div>
-            </div>
+            </a>
         </div>
         
     </div>
@@ -234,6 +234,7 @@
 let searchRes = []
 let searchHasMore = false
 let searchAppending = false
+let flag = false // 点击合并转发
 
 var swiper = new Swiper('.swiper-container', {
     loop:true,
@@ -249,6 +250,13 @@ function handleSearch() {
         document.body.style.position='fixed'
     })
     $('.searchCancel').on('click', function () {
+
+        // 移除样式 合并转发 确定按钮颜色 转发按钮
+        $('.checkbox_share').css('display', 'none')    
+        $('.searchEnsure').removeClass('submit')    
+        $('.footer').css('display', 'none')    
+
+
         $('.searchMainBg').css('display', 'none')
         $('.searchInp').val('')
         $('.searchMainPlacehoder').css('display', 'flex')
@@ -279,6 +287,19 @@ function highlightTarget(){
 function updateSearch(keyword) {
     // if(keyword===''){return}
     $('.searchResult').empty()
+    flag = false
+    // 搜到文章后添加样式
+    $('.searchMain').css('background-image', 'url(./assets/not_select_back.png)')    
+    $('.searchMain').css('background-size', 'cover')    
+    $('.searchMain').css('background-attachment', 'fixed')   
+    // 确定按钮样式
+    $('.searchEnsure').removeClass('submit')
+    // 展示合并转发
+    $('.mask').css('display', 'none')
+    $('.merge_share').removeClass('hidden')
+    $('.selectAll').addClass('hidden')
+    $('.checkbox_share').css('display', 'none')
+
     $.ajax({
         type:'POST',
         url:'https://news.lego.cn/v/news/search',
@@ -300,10 +321,9 @@ function updateSearch(keyword) {
                     // 确定按钮样式
                     $('.searchEnsure').addClass('submit')
                     // 展示合并转发
-                    $('.checkbox').css('display', 'block')
+                    $('.checkbox_share').css('display', 'block')
 
                     searchRes = e.data.list
-                    console.log("searchRes", searchRes)
                     if(searchRes.length>8){
                         for (let i=0;i<8;i++) {
                             let dom = genCard(searchRes[i])
@@ -405,17 +425,41 @@ function genCardS(data){
 }
 function genCard(data){
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
-    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"> <img src="./assets/unchecked.png" class="unchecked'+data.id+'"> <img src="./assets/checked.png" class="checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox'+data.id+'" /> </div> </div></div>')
+    if(flag) $('.mask').css('display', 'block')
+    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"> <img src="./assets/unchecked.png" class="unchecked unchecked'+data.id+'"> <img src="./assets/checked.png" class="checked checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox checkbox'+data.id+'" /> </div> </div></div>')
 }
 
 // 点击合并转发
-$('.checkbox').on('click', function () {
+$('.merge_share').on('click', function () {
+    // 添加状态判断 若是用户点击过合并转发 则后续上拉加载展示选择框
+    flag = true
     $('.searchMain').css('background-image', 'url(./assets/select_back.png)')    
     $('.mask').css('display', 'block')
-    $('.merge_share').toggleClass('hidden')
-    $('.selectAll').toggleClass('hidden')
+    $('.selectAll').removeClass('hidden')
+    $('.merge_share').addClass('hidden')
 
-    $('.share_box').css('display', 'flex')
+    // 修改确定按钮样式
+    $('.searchEnsure').removeClass('submit')
+    // 展示转发按钮
+    $('.footer').css('display', 'block')
+})
+
+// 点击全选
+// 得到所有的 input[name="check"] 判断一共多少个复选框
+// 判断已选中的复选框 是否 等于 总共的复选框
+// 如果是 则取消全部选中 如果不是则全部选中
+$('.selectAll').on('click', function () {
+    const total = $('input[name="check"]').length
+    const total_checked = $('input[name="check"]:checked').length
+    if(total===total_checked){
+        $('.checkbox').prop('checked', false)
+        $('.unchecked').removeClass('hidden')
+        $('.checked').addClass('hidden')
+    }else{
+        $('.checkbox').prop('checked', true)
+        $('.checked').removeClass('hidden')
+        $('.unchecked').addClass('hidden')
+    }
 })
 
 // 选中文章
@@ -426,14 +470,34 @@ function handleClick(id){
     $('.checkbox'+id).prop('checked', !$('.checkbox'+id).prop('checked'));
 }
 
+let ids = 'isSearch=2'
 // 转发
 function share(){
- // 获取所有选中的id
+    // 获取所有选中的id
     $('input[name="check"]:checked').each(function() {
-        console.log($(this).val());
+        ids += `&id=${$(this).val()}`
     });
+    if($('input[name="check"]:checked').length>0) shareHref()
+    else alert('请选择要转发的文章')
 }
 
+function shareHref(params) {
+    // 判断是否符合浏览器地址规则
+    let href = window.location.href
+    const isRule = href.includes('?')
+    href = href + (isRule ? '&' : '?') + ids
+    console.log(href);
+
+    if (!navigator.share) {
+        alert("您当前浏览器不支持分享！");
+    } else {
+        navigator.share({
+            title: '{$title}',
+            text: '{$introduce}',
+            url: href
+        });
+    }
+}
 </script>
 </body>
 </html>
