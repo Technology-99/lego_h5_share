@@ -5,51 +5,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ .Title }}</title>
-    <link rel="icon" href="https://lego.chic-mkt.com/minisite/lib/img/favicon.ico">
-  <script src="https://lego.chic-mkt.com/minisite/lib/js/jquery-3.5.1.min.js"></script>
-  <script src="https://lego.chic-mkt.com/minisite/lib/js/jweixin-1.4.0.js"></script>
-  <script>
-    function getQueryString(name) {
-      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.href) || [window.location.href, ""])[1].replace(/\+/g, '%20')) || null
-    }
-    wx.config({
-      debug: {{ .wechat.Debug }},
-      appId: {{ .wechat.AppId }},
-      timestamp: {{ .wechat.Timestamp }},
-      nonceStr: {{ .wechat.NonceStr }},
-      signature: {{ .wechat.Signature }},
-      jsApiList: {{ .wechat.JsApiList }},
-         });
-    wx.error(function (err) { });
-    wx.ready(function () {
-      const ShareConfig = {
-        title: "{{ .share.Title }}",
-        desc: "{{ .share.Desc }}",
-        link: "{{ .share.Link }}",
-        imgUrl: "{{ .share.ImgUrl }}",
-        success: function () {
-          console.log("share success")
-          const path = window.location.pathname;
-          $.ajax({
-            type: 'POST',
-            url: "./share",
-            contentType: "application/json;charset=UTF-8",
-            data: JSON.stringify({
-              path: window.location.pathname,
-              aid: Number(getQueryString("aid"))
-            }),
-            timeout: 3000,
-            success: () => console.log("send share success"),
-            error: function (error) {
-              console.log("error", error)
-            }
-          })
-        },
-      };
-      wx.onMenuShareAppMessage(ShareConfig);
-      wx.onMenuShareTimeline(ShareConfig);
-    });
-  </script>
+    <link rel="icon" href="https://lego.chic-mkt.com/minisite/lib/img/favicon.ico" />
+    <script src="https://lego.chic-mkt.com/minisite/lib/js/jquery-3.5.1.min.js"></script>
+    <script src="https://lego.chic-mkt.com/minisite/lib/js/jweixin-1.4.0.js"></script>
+    <script>
+      function getQueryString(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.href) || [window.location.href, ""])[1].replace(/\+/g, '%20')) || null
+      }
+      wx.config({
+        debug: {{ .wechat.Debug }},
+        appId: {{ .wechat.AppId }},
+        timestamp: {{ .wechat.Timestamp }},
+        nonceStr: {{ .wechat.NonceStr }},
+        signature: {{ .wechat.Signature }},
+        jsApiList: {{ .wechat.JsApiList }},
+           });
+      wx.error(function (err) { });
+      wx.ready(function () {
+        const ShareConfig = {
+          title: "{{ .share.Title }}",
+          desc: "{{ .share.Desc }}",
+          link: "{{ .share.Link }}",
+          imgUrl: "{{ .share.ImgUrl }}",
+          success: function () {
+            console.log("share success")
+            const path = window.location.pathname;
+            $.ajax({
+              type: 'POST',
+              url: "./share",
+              contentType: "application/json;charset=UTF-8",
+              data: JSON.stringify({
+                path: window.location.pathname,
+                aid: Number(getQueryString("aid"))
+              }),
+              timeout: 3000,
+              success: () => console.log("send share success"),
+              error: function (error) {
+                console.log("error", error)
+              }
+            })
+          },
+        };
+        wx.onMenuShareAppMessage(ShareConfig);
+        wx.onMenuShareTimeline(ShareConfig);
+      });
+    </script>
 
     <style>
       @font-face {
@@ -233,11 +233,15 @@
         justify-content: space-between;
         flex-wrap: wrap;
       }
+      .site_list ul a {
+        width: 49%;
+        margin: 0;
+      }
       .site_list ul li {
         display: flex;
         align-items: center;
         justify-content: space-around;
-        width: 49%;
+        width: 100%;
         height: 3.125rem;
         box-shadow: 0 0.0625rem 0.1875rem 0 rgba(6, 0, 1, 0.2);
         border-radius: 0.5rem;
@@ -355,32 +359,30 @@
         <!-- 站点 -->
         <div class="site_list">
           <ul>
-              {{ range .RecommendSites }}
-              <a href="{{ .Url }}">
-                <li>
-                      <span class="site">{{ .Title }}</span>
-                      <span class="rectangle"><img src="https://lego.chic-mkt.com/lego/asset/button.png" alt="" srcset="" /></span>
-                </li>
-              </a>
-              {{ end }}
+            {{ range .RecommendSites }}
+            <a href="{{ .Url }}">
+              <li>
+                <span class="site">{{ .Title }}</span>
+                <span class="rectangle"><img src="https://lego.chic-mkt.com/lego/asset/button.png" alt="" srcset="" /></span>
+              </li>
+            </a>
+            {{ end }}
           </ul>
         </div>
         <!-- 正文 -->
-        <div class="articel-body">
-        {{ .Body }}
-        </div>
+        <div class="articel-body">{{ .Body }}</div>
         <!-- 相关信息 -->
         <div class="related_information">
           <div class="related_information_title">相关信息</div>
           <ul>
-          {{ range .RecommendArticles }}
-            <li>
-                <a href="./article?aid={{ .Id }}">
-                  <span class="article_title">{{ .Title }}</span>
-                  <span class="rectangle"><img src="https://lego.chic-mkt.com/lego/asset/button.png" alt="" srcset="" /></span>
-                </a>
-            </li>
-          {{ end }}
+            {{ range .RecommendArticles }}
+            <a href="./article?aid={{ .Id }}">
+              <li>
+                <span class="article_title">{{ .Title }}</span>
+                <span class="rectangle"><img src="https://lego.chic-mkt.com/lego/asset/button.png" alt="" srcset="" /></span>
+              </li>
+            </a>
+            {{ end }}
           </ul>
         </div>
       </div>
@@ -412,6 +414,10 @@
           .each(function () {
             $(this).css('word-break', 'break-all')
           })
+      })
+
+      $('.back').click(function () {
+        history.back()
       })
     </script>
   </body>
