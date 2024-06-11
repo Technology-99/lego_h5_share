@@ -11,6 +11,43 @@
     function getQueryString(name) {
       return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.href) || [window.location.href, ""])[1].replace(/\+/g, '%20')) || null
     }
+    wx.config({
+      debug: {{ .wechat.Debug }},
+      appId: {{ .wechat.AppId }},
+      timestamp: {{ .wechat.Timestamp }},
+      nonceStr: {{ .wechat.NonceStr }},
+      signature: {{ .wechat.Signature }},
+      jsApiList: {{ .wechat.JsApiList }},
+         });
+    wx.error(function (err) { });
+    wx.ready(function () {
+      const ShareConfig = {
+        title: "{{ .share.Title }}",
+        desc: "{{ .share.Desc }}",
+        link: "{{ .share.Link }}",
+        imgUrl: "{{ .share.ImgUrl }}",
+        success: function () {
+          console.log("share success")
+          const path = window.location.pathname;
+          $.ajax({
+            type: 'POST',
+            url: "./share",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({
+              path: window.location.pathname,
+              cid: Number(getQueryString("cid"))
+            }),
+            timeout: 3000,
+            success: () => console.log("send share success"),
+            error: function (error) {
+              console.log("error", error)
+            }
+          })
+        },
+      };
+      wx.onMenuShareAppMessage(ShareConfig);
+      wx.onMenuShareTimeline(ShareConfig);
+    });
   </script>
     <link rel="stylesheet" href="https://lego.chic-mkt.com/news/assets/css/news_index.css" />
     <title>乐高集团新闻中心</title>
@@ -158,11 +195,11 @@
         </div>
         <div class="checkbox_share">
             <div class="merge_share">
-                <span class="checkbox_img"><img src="./assets/checkbox.png" alt="" srcset=""></span>
+                <span class="checkbox_img"><img src="https://lego.chic-mkt.com/lego/asset/checkbox.png" alt="" srcset=""></span>
                 <span class="transmit">合并转发</span>
             </div>
             <div class="selectAll hidden">
-                <span class="checkbox_img"><img src="./assets/selects.png" alt="" srcset=""></span>
+                <span class="checkbox_img"><img src="https://lego.chic-mkt.com/lego/asset/selects.png" alt="" srcset=""></span>
                 <span class="transmit">全选</span>
             </div>
         </div>
@@ -170,14 +207,14 @@
         </div>
 
         <div class="footer">
-            <a class="share_box" onclick="share()">
+            <a class="share_box" onclick="clickShare()">
                 <div class="share_icon">
-                    <img src="./assets/share.png" alt="" srcset="">
+                    <img src="https://lego.chic-mkt.com/lego/asset/share.png" alt="" srcset="">
                 </div>
                 <div class="share">转发</div>
             </a>
         </div>
-        
+
     </div>
     <div class="container">
         <div class="header">
@@ -188,14 +225,18 @@
         </div>
         <div class="swiper-container">
             <div class="swiper-wrapper">
+                {{ range .recommendArticles }}
+
                 <div class="swiper-slide">
-                        <a href="" class="lunboA">
-                            <img src="https://lego.chic-mkt.com/playbox/TID84/Upload/45dde62b-3371-4713-9751-838cba9ba794.jpg" class="boImg">
+                        <a href="./article?aid={{ .Id }}" class="lunboA">
+                            <img src="{{ .Cover }}?image_process=resize,w_750/format,webp" class="boImg">
                             <div class="titleBox">
-                                    <span class="title">标题</span>
+                                    <span class="title">{{ .Title }}</span>
                             </div>
                         </a>
                 </div>
+
+                {{ end }}
             </div>
             <div class="swiper-pagination"></div>
         </div>
@@ -206,23 +247,34 @@
             </div>
         </div>
         <div class="news-menu">
-                     <a href="">
-                        <div class="news-cl target">标题</div>
+            {{ range $i, $v := .labels }}
+
+                 {{if eq $v.Id $.selected}}
+                     <a href="./index?cid={{ .Id }}">
+                        <div class="news-cl target">{{ .Name }}</div>
                      </a>
-                    <a href="">
-                        <div class="news-cl">标题</div>
+                    {{else}}
+                    <a href="./index?cid={{ .Id }}">
+                        <div class="news-cl">{{ .Name }}</div>
                      </a>
+                {{end}}
+
+            {{ end }}
         </div>
         <div class="content">
-            <a href="">
+            {{ range .articles }}
+
+            <a href="./article?aid={{ .Id }}">
                 <div class="list-item">
-                    <img src="https://lego.chic-mkt.com/playbox/TID84/Upload/45dde62b-3371-4713-9751-838cba9ba794.jpg" alt="" class="item-img">
+                    <img src="{{ .Cover }}?image_process=resize,w_750/format,webp" alt="" class="item-img">
                     <div class="item-info">
-                        <div style="font-size:0.8rem">标题</div>
-                        <div>标题</div>
+                        <div style="font-size:0.8rem">{{ .ReleaseAt | formatDate }}</div>
+                        <div>{{ .Title }}</div>
                     </div>
                 </div>
             </a>
+
+            {{ end }}
         </div>
         <div style="color:#999;width:90%;display:flex;flex-direction: column;align-items: center;font-size:0.6rem;margin-top:10vw;margin-bottom:2rem">
             <div>媒体垂询，请发送邮件至 CNCorpComms@LEGO.com</div>
@@ -252,9 +304,9 @@ function handleSearch() {
     $('.searchCancel').on('click', function () {
 
         // 移除样式 合并转发 确定按钮颜色 转发按钮
-        $('.checkbox_share').css('display', 'none')    
-        $('.searchEnsure').removeClass('submit')    
-        $('.footer').css('display', 'none')    
+        $('.checkbox_share').css('display', 'none')
+        $('.searchEnsure').removeClass('submit')
+        $('.footer').css('display', 'none')
 
 
         $('.searchMainBg').css('display', 'none')
@@ -289,9 +341,9 @@ function updateSearch(keyword) {
     $('.searchResult').empty()
     flag = false
     // 搜到文章后添加样式
-    $('.searchMain').css('background-image', 'url(./assets/not_select_back.png)')    
-    $('.searchMain').css('background-size', 'cover')    
-    $('.searchMain').css('background-attachment', 'fixed')   
+    $('.searchMain').css('background-image', 'url(https://lego.chic-mkt.com/lego/asset/not_select_back.png)')
+    $('.searchMain').css('background-size', 'cover')
+    $('.searchMain').css('background-attachment', 'fixed')
     // 确定按钮样式
     $('.searchEnsure').removeClass('submit')
     // 展示合并转发
@@ -315,9 +367,9 @@ function updateSearch(keyword) {
                     $('.searchResult').append('<div style="color:#666" class="searchTip">没有搜到相关文章</div>')
                 }else{
                     // 搜到文章后添加样式
-                    $('.searchMain').css('background-image', 'url(./assets/not_select_back.png)')    
-                    $('.searchMain').css('background-size', 'cover')    
-                    $('.searchMain').css('background-attachment', 'fixed')   
+                    $('.searchMain').css('background-image', 'url(https://lego.chic-mkt.com/lego/asset/not_select_back.png)')
+                    $('.searchMain').css('background-size', 'cover')
+                    $('.searchMain').css('background-attachment', 'fixed')
                     // 确定按钮样式
                     $('.searchEnsure').addClass('submit')
                     // 展示合并转发
@@ -421,19 +473,19 @@ window.onscroll = function(){
 }
 function genCardS(data){
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
-    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"><img src="./assets/unchecked.png" class="unchecked'+data.id+'"> <img src="./assets/checked.png" class="checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox'+data.id+'" /> </div> </div> </div>')
+    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"><img src="https://lego.chic-mkt.com/lego/asset/unchecked.png" class="unchecked'+data.id+'"> <img src="https://lego.chic-mkt.com/lego/asset/checked.png" class="checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox'+data.id+'" /> </div> </div> </div>')
 }
 function genCard(data){
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
     if(flag) $('.mask').css('display', 'block')
-    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"> <img src="./assets/unchecked.png" class="unchecked unchecked'+data.id+'"> <img src="./assets/checked.png" class="checked checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox checkbox'+data.id+'" /> </div> </div></div>')
+    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div>'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"> <img src="https://lego.chic-mkt.com/lego/asset/unchecked.png" class="unchecked unchecked'+data.id+'"> <img src="https://lego.chic-mkt.com/lego/asset/checked.png" class="checked checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox checkbox'+data.id+'" /> </div> </div></div>')
 }
 
 // 点击合并转发
 $('.merge_share').on('click', function () {
     // 添加状态判断 若是用户点击过合并转发 则后续上拉加载展示选择框
     flag = true
-    $('.searchMain').css('background-image', 'url(./assets/select_back.png)')    
+    $('.searchMain').css('background-image', 'url(https://lego.chic-mkt.com/lego/asset/select_back.png)')
     $('.mask').css('display', 'block')
     $('.selectAll').removeClass('hidden')
     $('.merge_share').addClass('hidden')
@@ -472,7 +524,7 @@ function handleClick(id){
 
 let ids = 'isSearch=2'
 // 转发
-function share(){
+function clickShare(){
     // 获取所有选中的id
     $('input[name="check"]:checked').each(function() {
         ids += `&id=${$(this).val()}`
@@ -488,15 +540,15 @@ function shareHref(params) {
     href = href + (isRule ? '&' : '?') + ids
     console.log(href);
 
-    if (!navigator.share) {
-        alert("您当前浏览器不支持分享！");
-    } else {
-        navigator.share({
-            title: '{$title}',
-            text: '{$introduce}',
-            url: href
-        });
-    }
+    wx.onMenuShareAppMessage({
+        title: "{{ .share.Title }}",
+        desc: "{{ .share.Desc }}",
+        link: "{{ .share.Link }}",
+        imgUrl: "{{ .share.ImgUrl }}",
+        success: function () {
+            console.log("share success")
+        }
+    });
 }
 </script>
 </body>

@@ -4,19 +4,52 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>标题</title>
-    <link rel="icon" href="https://lego.chic-mkt.com/minisite/lib/img/favicon.ico" />
-    <script src="https://lego.chic-mkt.com/minisite/lib/js/jquery-3.5.1.min.js"></script>
-    <script src="https://lego.chic-mkt.com/minisite/lib/js/jweixin-1.4.0.js"></script>
-    <script>
-      function getQueryString(name) {
-        return (
-          decodeURIComponent(
-            (new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.href) || [window.location.href, ''])[1].replace(/\+/g, '%20')
-          ) || null
-        )
-      }
-    </script>
+    <title>{{ .Title }}</title>
+    <link rel="icon" href="https://lego.chic-mkt.com/minisite/lib/img/favicon.ico">
+  <script src="https://lego.chic-mkt.com/minisite/lib/js/jquery-3.5.1.min.js"></script>
+  <script src="https://lego.chic-mkt.com/minisite/lib/js/jweixin-1.4.0.js"></script>
+  <script>
+    function getQueryString(name) {
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.href) || [window.location.href, ""])[1].replace(/\+/g, '%20')) || null
+    }
+    wx.config({
+      debug: {{ .wechat.Debug }},
+      appId: {{ .wechat.AppId }},
+      timestamp: {{ .wechat.Timestamp }},
+      nonceStr: {{ .wechat.NonceStr }},
+      signature: {{ .wechat.Signature }},
+      jsApiList: {{ .wechat.JsApiList }},
+         });
+    wx.error(function (err) { });
+    wx.ready(function () {
+      const ShareConfig = {
+        title: "{{ .share.Title }}",
+        desc: "{{ .share.Desc }}",
+        link: "{{ .share.Link }}",
+        imgUrl: "{{ .share.ImgUrl }}",
+        success: function () {
+          console.log("share success")
+          const path = window.location.pathname;
+          $.ajax({
+            type: 'POST',
+            url: "./share",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({
+              path: window.location.pathname,
+              aid: Number(getQueryString("aid"))
+            }),
+            timeout: 3000,
+            success: () => console.log("send share success"),
+            error: function (error) {
+              console.log("error", error)
+            }
+          })
+        },
+      };
+      wx.onMenuShareAppMessage(ShareConfig);
+      wx.onMenuShareTimeline(ShareConfig);
+    });
+  </script>
 
     <style>
       @font-face {
@@ -309,47 +342,45 @@
         <!-- 头部 -->
         <div class="articel-head">
           <!-- 返回按钮 -->
-          <div class="back"><img src="./assets/back.png" alt="" srcset="" /></div>
+          <div class="back"><img src="https://lego.chic-mkt.com/lego/asset/back.png" alt="" srcset="" /></div>
           <!-- 文章信息 -->
           <div class="info">
-            <div class="date">2024-01-26</div>
-            <div class="comp">乐高集团新闻中心</div>
+            <div class="date">{{ .ReleaseAt | formatDate }}</div>
+            <div class="comp">{{ .Author }}</div>
           </div>
           <div class="yellow_line"></div>
         </div>
         <!-- 标题 -->
-        <div class="title">乐高集团与艾赐魔袋集团宣布合作推出桌面游戏——Monkey Palace</div>
+        <div class="title">{{ .Title }}</div>
         <!-- 站点 -->
         <div class="site_list">
           <ul>
-            <li>
-              <span class="site">公益项目微网站</span>
-              <span class="rectangle"><img src="./assets/button.png" alt="" srcset="" /></span>
-            </li>
-            <li>
-              <span class="site">可持续发展微网站</span>
-              <span class="rectangle"><img src="./assets/button.png" alt="" srcset="" /></span>
-            </li>
-            <li>
-              <span class="site">可持续发展微网站</span>
-              <span class="rectangle"><img src="./assets/button.png" alt="" srcset="" /></span>
-            </li>
+              {{ range .RecommendSites }}
+              <a href="{{ .Url }}">
+                <li>
+                      <span class="site">{{ .Title }}</span>
+                      <span class="rectangle"><img src="https://lego.chic-mkt.com/lego/asset/button.png" alt="" srcset="" /></span>
+                </li>
+              </a>
+              {{ end }}
           </ul>
         </div>
         <!-- 正文 -->
-        <div class="articel-body"></div>
+        <div class="articel-body">
+        {{ .Body }}
+        </div>
         <!-- 相关信息 -->
         <div class="related_information">
           <div class="related_information_title">相关信息</div>
           <ul>
+          {{ range .RecommendArticles }}
             <li>
-              <span class="article_title">乐高集团嘉兴工厂家庭开放日接待3000名访客，打造家庭友好型工作场所</span>
-              <span class="rectangle"><img src="./assets/button.png" alt="" srcset="" /></span>
+                <a href="./article?aid={{ .Id }}">
+                  <span class="article_title">{{ .Title }}</span>
+                  <span class="rectangle"><img src="https://lego.chic-mkt.com/lego/asset/button.png" alt="" srcset="" /></span>
+                </a>
             </li>
-            <li>
-              <span class="article_title">乐高集团嘉兴工厂家庭开放日接待3000名访客，打造家庭友好型工作场所</span>
-              <span class="rectangle"><img src="./assets/button.png" alt="" srcset="" /></span>
-            </li>
+          {{ end }}
           </ul>
         </div>
       </div>
