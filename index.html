@@ -196,7 +196,7 @@
         <div class="checkbox_share">
             <div class="merge_share">
                 <span class="checkbox_img"><img src="https://lego.chic-mkt.com/lego/asset/checkbox.png" alt="" srcset=""></span>
-                <span class="transmit">合并转发</span>
+                <span class="transmit">合并复制</span>
             </div>
             <div class="selectAll hidden">
                 <span class="checkbox_img"><img src="https://lego.chic-mkt.com/lego/asset/selects.png" alt="" srcset=""></span>
@@ -211,7 +211,7 @@
                 <div class="share_icon">
                     <img src="https://lego.chic-mkt.com/lego/asset/share.png" alt="" srcset="">
                 </div>
-                <div class="share">转发</div>
+                <div class="share">复制</div>
             </a>
         </div>
 
@@ -522,9 +522,10 @@ function handleClick(id){
     $('.checkbox'+id).prop('checked', !$('.checkbox'+id).prop('checked'));
 }
 
-let ids = 'isSearch=2'
+let ids = ''
 // 转发
 function clickShare(){
+    ids = 'isSearch=2'
     // 获取所有选中的id
     $('input[name="check"]:checked').each(function() {
         ids += `&id=${$(this).val()}`
@@ -534,13 +535,16 @@ function clickShare(){
 }
 
 function shareHref(params) {
+    console.log(ids);
     // 判断是否符合浏览器地址规则
     let href = window.location.href
     const isRule = href.includes('?')
     href = href + (isRule ? '&' : '?') + ids
     console.log(href);
 
-    wx.onMenuShareAppMessage({
+    copyToClipboard(href)
+
+    /* wx.onMenuShareAppMessage({
         title: "{{ .share.Title }}",
         desc: "{{ .share.Desc }}",
         link: "{{ .share.Link }}",
@@ -548,7 +552,23 @@ function shareHref(params) {
         success: function () {
             console.log("share success")
         }
-    });
+    }); */
+}
+
+function copyToClipboard(str) {
+    // 使用新的输入框来复制文本
+    var input = document.createElement('input');
+    input.value = str;
+    document.body.appendChild(input);
+    input.select();
+    // 尝试复制
+    try {
+        var successful = document.execCommand('copy');
+    } catch (err) {
+        alert('复制链接失败');
+    }
+    // 移除输入框
+    document.body.removeChild(input);
 }
 </script>
 </body>
