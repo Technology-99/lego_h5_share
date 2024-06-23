@@ -350,7 +350,7 @@ function updateSearch(keyword) {
     if(interfaceUrl === 'search'){
         params.title=keyword
     }else if(interfaceUrl === 'searchWhereIds'){
-        params.ids = keyword
+        params.id = keyword
     }
 
     $('.searchResult').empty()
@@ -369,7 +369,9 @@ function updateSearch(keyword) {
 
     $.ajax({
         type:'POST',
-        url:`https://news.lego.cn/v/news/${interfaceUrl}`,
+        // url:`https://news.lego.cn/v/news/${interfaceUrl}`, // 正式地址
+        url:`https://test-apis.csvw88.com/v/news/${interfaceUrl}`, // 测试地址
+        contentType:interfaceUrl === 'search' ? "application/x-www-form-urlencoded" : "application/json",
         data:JSON.stringify(params),
         success:function(e){
             if(e.code===1000){
@@ -592,7 +594,7 @@ function getUrlParams(url) {
     for(let i = 0,len = paramsArr.length;i < len;i++){
         // 再通过 = 将每一个参数分割为 key:value 的形式
         let [key,value] = paramsArr[i].split('=')
-        if(key === 'id') ids.push(value)
+        if(key === 'id') ids.push(Number(value))
     }
     return ids
 }
