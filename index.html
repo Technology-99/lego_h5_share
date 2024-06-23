@@ -295,8 +295,13 @@ var swiper = new Swiper('.swiper-container', {
     },
 });
 handleSearch()
+
+// 动态改变接口地址
+let interfaceUrl = ''
+
 function handleSearch() {
     $('.searchBtn').on('click', function () {
+        interfaceUrl = 'search'
         $('.searchMainBg').css('display', 'flex')
         $('.searchMainPlacehoder').css('display', 'flex')
         document.body.style.position='fixed'
@@ -336,8 +341,18 @@ function highlightTarget(){
 	}
 }
 
+// 调用接口获取搜索的数据
 function updateSearch(keyword) {
-    // if(keyword===''){return}
+    if(keyword === '') return
+
+    let params = {}
+
+    if(interfaceUrl === 'search'){
+        params.title=keyword
+    }else if(interfaceUrl === 'searchWhereIds'){
+        params.ids = keyword
+    }
+
     $('.searchResult').empty()
     flag = false
     // 搜到文章后添加样式
@@ -354,11 +369,8 @@ function updateSearch(keyword) {
 
     $.ajax({
         type:'POST',
-        url:'https://news.lego.cn/v/news/search',
-        data:JSON.stringify({
-            // title:keyword
-            title:'乐高'
-        }),
+        url:`https://news.lego.cn/v/news/${interfaceUrl}`,
+        data:JSON.stringify(params),
         success:function(e){
             if(e.code===1000){
                 //获得数据
@@ -397,6 +409,7 @@ function updateSearch(keyword) {
         }
     })
 }
+
 $('.searchResult')[0].onscroll = function(){
   if(!searchHasMore){return}
   if(searchAppending){return}
@@ -420,8 +433,6 @@ $('.searchResult')[0].onscroll = function(){
     }
   }
 }
-
-
 
 $('.searchMainBg').on('touchmove', function (e) {
     e.stopPropagation()
@@ -569,6 +580,36 @@ function copyToClipboard(str) {
     }
     // 移除输入框
     document.body.removeChild(input);
+}
+
+function getUrlParams(url) {
+    // 通过 ? 分割获取后面的参数字符串
+    let urlStr = url.split('?')[1]
+    // 创建空对象存储参数
+    let ids = []
+    // 再通过 & 将每一个参数单独分割出来
+    let paramsArr = urlStr.split('&')
+    for(let i = 0,len = paramsArr.length;i < len;i++){
+        // 再通过 = 将每一个参数分割为 key:value 的形式
+        let [key,value] = paramsArr[i].split('=')
+        if(key === 'id') ids.push(value)
+    }
+    return ids
+}
+
+window.onload = function () {
+    const href = window.location.href
+    // 判断是否是复制过来的
+    if(href.includes('isSearch=2')){
+        // 获取地址栏参数
+        const urlParams = getUrlParams(href)
+        if(urlParams.length>0){
+            interfaceUrl = 'searchWhereIds'
+            // 展示搜索框
+            $('.searchMainBg').css('display', 'flex')
+            updateSearch(urlParams)
+        }
+    }
 }
 </script>
 </body>
