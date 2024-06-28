@@ -67,6 +67,11 @@
             position: relative;
         }
 
+        .my-pagination-hidden{
+            display: none;
+        }
+
+        /* 分享面板 样式 */
         .checkbox_share{
             background-color: white;
             width: 90vw;
@@ -92,11 +97,12 @@
             margin-right: .5rem;
         }
 
-        img{
+        .checkbox_share .checkbox_img img{
             width: 100%;
             height: 100%;
         }
 
+        /* 合并转发 */
         .checkbox_share .merge_share .transmit{
             font-family: SourceHanSansCN;
             font-weight: 500;
@@ -104,6 +110,7 @@
             color: #373737;
         }
 
+        /* 全选 */
         .checkbox_share .selectAll .transmit{
             font-family: SourceHanSansCN;
             font-weight: 400;
@@ -143,6 +150,7 @@
             display: none !important;
         }
 
+        /* 复制 */
         .footer{
             width: 90vw;
             background-color: white;
@@ -153,9 +161,8 @@
             display: none;
         }
 
-        .share_box{
+        .footer .share_box{
             margin: 0 auto;
-
             background: #FFD500;
             width: 9.0625rem;
             height: 2.5rem;
@@ -165,17 +172,200 @@
             justify-content: center;
         }
 
-        .share_icon{
+        .footer .share_box .share_icon{
             width: 1.25rem;
             height: 1.25rem;
             margin-right: .375rem;
         }
 
-        .share{
+        .footer .share_box .share_icon img{
+            width: 100%;
+            height: 100%;
+        }
+
+        .footer .share_box .share{
             font-family: SourceHanSansCN;
             font-weight: 500;
             font-size: 1rem;
             color: #000000;
+        }
+
+        /* 上半部分 样式 */
+        .top {
+            width: 100%;
+            height: 31.25rem;
+            background-color: #FFD500;
+
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        /* 搜索框 */
+        .top .header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.875rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .top .header .logo{
+            width: 1.9375rem;
+            height: 1.9375rem;
+        }
+
+        .top .header .searchBtnBox{
+            width: 7.9375rem;
+            height: 1.8125rem;
+            align-items: center;
+            margin: 0;
+        }
+
+        .top .header .searchBtnBox .searchBtn{
+            width: 100%;
+            height: 100%;
+            border-radius: .9375rem;
+        }
+
+        .top .header .searchBtnBox .searchBtn .icon-search{
+            margin-right: .9375rem;
+            margin-left: auto;
+        }
+
+        /* 轮播图 */
+        .top .swiper-container .swiper-wrapper .swiper-slide{
+            width: 17.5rem !important;
+            border-radius: .625rem;
+        }
+
+        .top .swiper-container .swiper-wrapper .swiper-slide .lunboA .titleBox{
+            width: 17.5rem;
+            padding: 0;
+            padding-bottom: .875rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .top .swiper-container .swiper-wrapper .swiper-slide .lunboA .titleBox .title{
+            width: 100%;
+            height: 3.4375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            white-space: normal;
+            padding: 0 1rem;
+
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.1875rem;
+        }
+
+        /* tabs 标签页 */
+        .news-menu{
+            margin-top: 1.25rem;
+        }
+
+        .news-menu .news-cl{
+            width: 9.375rem;
+            height: 2.1875rem;
+            border: .0625rem solid #000000;
+            border-radius: .625rem;
+        }
+
+        /* 下方资讯 */
+        .bottom{
+            position: fixed;
+            /* top: 23rem; */
+            top: 1.4375rem;
+            z-index: 10;
+
+            width: 100%;
+            height: 100%;
+
+            background-image: url('./assets/information.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .bottom .information{
+            margin-top: .75rem;
+            margin-left: 1.875rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .bottom .content{
+            width: 100%;
+            height: calc(100% - 3.125rem - 1.4375rem);
+            overflow-y: auto;
+        }
+
+        .bottom .content a{
+            margin: 0;
+            margin-bottom: .625rem;
+        }
+
+        .bottom .content .list-item{
+            width: 19.6875rem;
+            height: 14.375rem;
+            background-color: white;
+            box-shadow: 0 .0625rem .1875rem 0 rgba(6,0,1,0.2);
+            border-radius: .5rem;
+        }
+
+        .bottom .content .list-item .article{
+            width: 18.3125rem;
+        }
+
+        .bottom .content .list-item .article .cover{
+            height: 7.75rem;
+        }
+        
+        .bottom .content .list-item .article .cover img{
+            width: 100%;
+            height: 100%;
+            border-radius: .5rem;
+        }
+
+        .bottom .content .list-item .article .time{
+            font-weight: 500;
+            font-size: .6875rem;
+            color: #000000;
+            margin-top: .75rem;
+        }
+
+        .bottom .content .list-item .article .line {
+            width: 100%; /* 横线的宽度 */
+            height: .0625rem; /* 横线的高度 */
+            margin: .4375rem 0;
+            background: linear-gradient(
+            to right,
+            rgba(51,51,51,0) 0%,
+            rgba(51,51,51,0) 10%,
+            rgba(51,51,51, 0.3) 20%,
+            rgba(51,51,51, 0.4) 30%,
+            rgba(51,51,51, 0.5) 40%,
+            rgba(51,51,51, 0.8) 50%,
+            rgba(51,51,51, 0.5) 60%,
+            rgba(51,51,51, 0.4) 70%,
+            rgba(51,51,51, 0.3) 80%,
+            rgba(51,51,51,0) 90%,
+            rgba(51,51,51,0) 100%)
+        }
+
+        .bottom .content .list-item .article .title{
+            font-weight: 500;
+            font-size: 1rem;
+            color: #000000;
+
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -183,6 +373,8 @@
     <script src="https://lego.chic-mkt.com/news/assets/lib/swiper.js"> </script>
     <!-- =======================h5=================================== -->
     <link rel="stylesheet" href="https://lego.chic-mkt.com/news/assets/css/news_index_h5.css" />
+
+    <!-- 分享 -->
     <div class="searchMainBg" style="display: none;" >
         <div class="searchMain">
             <div class="searchInputBox">
@@ -195,11 +387,15 @@
         </div>
         <div class="checkbox_share">
             <div class="merge_share">
-                <span class="checkbox_img"><img src="https://lego.chic-mkt.com/lego/asset/checkbox.png" alt="" srcset=""></span>
-                <span class="transmit">合并复制</span>
+                <span class="checkbox_img">
+                    <img src="https://lego.chic-mkt.com/lego/asset/checkbox.png" alt="" srcset="">
+                </span>
+                <span class="transmit">合并转发</span>
             </div>
             <div class="selectAll hidden">
-                <span class="checkbox_img"><img src="https://lego.chic-mkt.com/lego/asset/selects.png" alt="" srcset=""></span>
+                <span class="checkbox_img">
+                    <img src="https://lego.chic-mkt.com/lego/asset/selects.png" alt="" srcset="">
+                </span>
                 <span class="transmit">全选</span>
             </div>
         </div>
@@ -216,72 +412,158 @@
         </div>
 
     </div>
+
     <div class="container">
-        <div class="header">
-            <img src="https://lego.chic-mkt.com/news/assets/static/logo.jpg" alt="" class="logo">
-            <div class="main-title">乐高集团新闻中心</div>
-            <div class="btn-box">
-            </div>
-        </div>
-        <div class="swiper-container">
-            <div class="swiper-wrapper">
-                {{ range .recommendArticles }}
-
-                <div class="swiper-slide">
-                        <a href="./article?aid={{ .Id }}" class="lunboA">
-                            <img src="{{ .Cover }}?image_process=resize,w_750/format,webp" class="boImg">
-                            <div class="titleBox">
-                                    <span class="title">{{ .Title }}</span>
-                            </div>
-                        </a>
-                </div>
-
-                {{ end }}
-            </div>
-            <div class="swiper-pagination"></div>
-        </div>
-        <div class="searchBtnBox">
-            <div class="searchBtn">
-                <div class="icon-search">&#xe986</div>
-                <div class="searchWord">请输入关键字搜索</div>
-            </div>
-        </div>
-        <div class="news-menu">
-            {{ range $i, $v := .labels }}
-
-                 {{if eq $v.Id $.selected}}
-                     <a href="./index?cid={{ .Id }}">
-                        <div class="news-cl target">{{ .Name }}</div>
-                     </a>
-                    {{else}}
-                    <a href="./index?cid={{ .Id }}">
-                        <div class="news-cl">{{ .Name }}</div>
-                     </a>
-                {{end}}
-
-            {{ end }}
-        </div>
-        <div class="content">
-            {{ range .articles }}
-
-            <a href="./article?aid={{ .Id }}">
-                <div class="list-item">
-                    <img src="{{ .Cover }}?image_process=resize,w_750/format,webp" alt="" class="item-img">
-                    <div class="item-info">
-                        <div style="font-size:0.8rem">{{ .ReleaseAt | formatDate }}</div>
-                        <div>{{ .Title }}</div>
+        <div class="top">
+            <!-- 头部 搜索 -->
+            <div class="header">
+                <img src="https://lego.chic-mkt.com/news/assets/static/logo.jpg" alt="" class="logo">
+                
+                <div class="searchBtnBox">
+                    <div class="searchBtn">
+                        <div class="icon-search">&#xe986</div>
                     </div>
                 </div>
-            </a>
+            </div>
 
-            {{ end }}
+            <!-- 轮播图 -->
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <!-- {{ range .recommendArticles }} -->
+
+                    <div class="swiper-slide">
+                        <a href="./article?aid={{ .Id }}" class="lunboA">
+                            <!-- <img src="{{ .Cover }}?image_process=resize,w_750/format,webp" class="boImg"> -->
+                            <img src="https://lego.chic-mkt.com/news/TID83/Upload/58f30ccf-5ad1-430f-b8e7-30fb1631fc15.png?image_process=resize,w_750/format,webp" class="boImg">
+                            <div class="titleBox">
+                                <!-- <span class="title">{{ .Title }}</span> -->
+                                <p class="title">美团闪购与乐高®品牌达成合作，全国120余城近500家乐高品牌零售店全量上线,美团闪购与乐高®品牌达成合作，全国120余城近500家乐高品牌零售店全量上线</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="swiper-slide">
+                        <a href="./article?aid={{ .Id }}" class="lunboA">
+                            <img src="https://lego.chic-mkt.com/news/TID83/Upload/f28d2539-7f25-4730-9b13-b1c09e49db8a.jpg?image_process=resize,w_750/format,webp" class="boImg">
+                            <div class="titleBox">
+                                <p class="title">美团闪购与乐高®品牌达成合作，全国120余城近500家乐高品牌零售店全量上线</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="swiper-slide">
+                        <a href="./article?aid={{ .Id }}" class="lunboA">
+                            <img src="https://lego.chic-mkt.com/news/TID83/Upload/58f30ccf-5ad1-430f-b8e7-30fb1631fc15.png?image_process=resize,w_750/format,webp" class="boImg">
+                            <div class="titleBox">
+                                <p class="title">美团闪购与乐高®品牌达成合作，全国120余城近500家乐高品牌零售店全量上线</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="swiper-slide">
+                        <a href="./article?aid={{ .Id }}" class="lunboA">
+                            <img src="https://lego.chic-mkt.com/news/TID83/Upload/f28d2539-7f25-4730-9b13-b1c09e49db8a.jpg?image_process=resize,w_750/format,webp" class="boImg">
+                            <div class="titleBox">
+                                <p class="title">美团闪购与乐高®品牌达成合作，全国120余城近500家乐高品牌零售店全量上线</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- {{ end }} -->
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <!-- tabs分类 -->
+            <div class="news-menu">
+                <!-- {{ range $i, $v := .labels }}
+
+                    {{if eq $v.Id $.selected}}
+                        <a href="./index?cid={{ .Id }}">
+                            <div class="news-cl target">{{ .Name }}</div>
+                        </a>
+                        {{else}}
+                        <a href="./index?cid={{ .Id }}">
+                            <div class="news-cl">{{ .Name }}</div>
+                        </a>
+                    {{end}}
+
+                {{ end }} -->
+                <a href="./index?cid={{ .Id }}">
+                    <div class="news-cl target">品牌</div>
+                </a>
+                <a href="./index?cid={{ .Id }}">
+                    <div class="news-cl target">产品</div>
+                </a>
+                <a href="./index?cid={{ .Id }}">
+                    <div class="news-cl target">业务</div>
+                </a>
+                <a href="./index?cid={{ .Id }}">
+                    <div class="news-cl target">可持续发展</div>
+                </a>
+            </div>
         </div>
-        <div style="color:#999;width:90%;display:flex;flex-direction: column;align-items: center;font-size:0.6rem;margin-top:10vw;margin-bottom:2rem">
-            <div>媒体垂询，请发送邮件至 CNCorpComms@LEGO.com</div>
-            <div>LEGO，乐高和LEGO标识均为乐高集团的商标。</div>
-            <div>2024乐高集团著作权所有。</div>
+
+        <div class="bottom">
+            <div class="information">近期资讯</div>
+            <!-- 资讯文章 -->
+            <div class="content">
+                <!-- {{ range .articles }} -->
+
+                <a href="./article?aid={{ .Id }}">
+                    <div class="list-item">
+                        <div class="article">
+                            <!-- <img src="{{ .Cover }}?image_process=resize,w_750/format,webp" alt="" class="item-img"> -->
+                            <div class="cover"><img src="https://lego.chic-mkt.com/news/TID83/Upload/f28d2539-7f25-4730-9b13-b1c09e49db8a.jpg?image_process=resize,w_750/format,webp" alt=""></div>
+                            <!-- <div style="font-size:0.8rem">{{ .ReleaseAt | formatDate }}</div>
+                                <div>{{ .Title }}</div> -->
+                            <div class="time">2024-01-26</div>
+                            <div class="line"></div>
+                            <div class="title">乐高集团与艾赐魔袋集团宣布合作推出桌面游戏—— Monkey Palace</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./article?aid={{ .Id }}">
+                    <div class="list-item">
+                        <div class="article">
+                            <div class="cover"><img src="https://lego.chic-mkt.com/news/TID83/Upload/f28d2539-7f25-4730-9b13-b1c09e49db8a.jpg?image_process=resize,w_750/format,webp" alt=""></div>
+                            <div class="time">2024-01-26</div>
+                            <div class="line"></div>
+                            <div class="title">乐高集团与艾赐魔袋集团宣布合作推出桌面游戏—— Monkey Palace</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./article?aid={{ .Id }}">
+                    <div class="list-item">
+                        <div class="article">
+                            <div class="cover"><img src="https://lego.chic-mkt.com/news/TID83/Upload/f28d2539-7f25-4730-9b13-b1c09e49db8a.jpg?image_process=resize,w_750/format,webp" alt=""></div>
+                            <div class="time">2024-01-26</div>
+                            <div class="line"></div>
+                            <div class="title">乐高集团与艾赐魔袋集团宣布合作推出桌面游戏—— Monkey Palace</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./article?aid={{ .Id }}">
+                    <div class="list-item">
+                        <div class="article">
+                            <div class="cover"><img src="https://lego.chic-mkt.com/news/TID83/Upload/f28d2539-7f25-4730-9b13-b1c09e49db8a.jpg?image_process=resize,w_750/format,webp" alt=""></div>
+                            <div class="time">2024-01-26</div>
+                            <div class="line"></div>
+                            <div class="title">乐高集团与艾赐魔袋集团宣布合作推出桌面游戏—— Monkey Palace乐高集团与艾赐魔袋集团宣布合作推出桌面游戏—— Monkey Palace</div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- {{ end }} -->
+
+            <!-- 著作权 -->
+                <div style="color:#999;display:flex;flex-direction: column;align-items: center;font-size:0.6rem;margin-top:10vw;padding-bottom:2rem">
+                    <div>媒体垂询，请发送邮件至 CNCorpComms@LEGO.com</div>
+                    <div>LEGO，乐高和LEGO标识均为乐高集团的商标。</div>
+                    <div>2024乐高集团著作权所有。</div>
+                </div>
+
+            </div>
         </div>
     </div>
+
 <script>
 let searchRes = []
 let searchHasMore = false
@@ -290,9 +572,9 @@ let flag = false // 点击合并转发
 
 var swiper = new Swiper('.swiper-container', {
     loop:true,
-    pagination: {
-        el: '.swiper-pagination',
-    },
+    slidesPerView:'auto', // 设置slider容器能够同时显示的slides数量
+    centeredSlides:true, // 居中幻灯片
+    spaceBetween:12, // 设置slide之间的距离
 });
 handleSearch()
 
