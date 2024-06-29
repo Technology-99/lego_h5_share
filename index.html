@@ -911,7 +911,7 @@ getListData()
 function genCardS(data){
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
 
-    return $('<a href="./article?aid='+data.id+'"><div class="list-item"><div class="article"><div class="cover"><img src="'+data.cover+'" alt="" class="item-img"></div><div style="font-size:0.8rem">'+date+'</div><div class="line"></div><div class="title">'+data.title+'</div></div></div></a>')
+    return $('<a href="./article?aid='+data.id+'"><div class="list-item"><div class="article"><div class="cover"><img src="'+data.cover+'" alt="" class="item-img"></div><div class="time">'+date+'</div><div class="line"></div><div class="title">'+data.title+'</div></div></div></a>')
 }
 
 // 搜索滚动
