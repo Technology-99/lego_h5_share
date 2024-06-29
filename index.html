@@ -65,16 +65,15 @@
 
         /* 分享面板 样式 */
         .searchMainBg .searchMain{
-            margin: 0;
-            border-radius: .4375rem;
-            height: 10.5rem;
+            border-radius: .5625rem;
+            margin-top: 0;
         }
 
         .searchMainBg .checkbox_share{
             background-color: white;
             width: 90vw;
             display: none;
-            margin-top: -5px;
+            margin-top: -0.4375rem;
             padding-bottom: 1rem;
         }
 
@@ -119,13 +118,19 @@
         }
 
         .searchMainBg .searchResult{
-            margin-top: 0 !important;
-            /* display: none; */
-            /* height: 22rem; */
+            max-height: 50vh;
+            margin-top: 0;
+            border-bottom-left-radius: .4375rem;
+            border-bottom-right-radius: .4375rem;
         }
 
         .searchMainBg .searchResult .data_box{
             position: relative;
+        }
+
+        .searchMainBg .footer{
+            margin-bottom: 0;
+            margin-top: -0.3125rem;
         }
 
         .list-item-search{
@@ -147,8 +152,7 @@
         .check_icon_box{
             width: 1.3125rem;
             height: 1.3125rem;
-            margin-top: .5625rem;
-            margin-left: .75rem;
+            margin-left: 1.875rem;
         }
 
         .check_icon_box img{
@@ -203,6 +207,78 @@
             font-weight: 500;
             font-size: 1rem;
             color: #000000;
+        }
+
+        /* 确认转发 */
+        .searchMainBg .copy_successful_box{
+            display: none;
+
+            background-color: white;
+            text-align: center;
+            width: 21.125rem;
+            height: 10rem;
+
+            font-weight: 400;
+            font-size: .9375rem;
+            color: #000000;
+            border-radius: .5rem;
+        }
+
+        .searchMainBg .copy_successful_box .tips{
+            margin-top: 1.875rem;
+        }
+
+        .searchMainBg .copy_successful_box .tips .close_pop{
+            width: 6.625rem;
+            height: 2.6875rem;
+            background: #FFD500;
+            border-radius: .5rem;
+
+            margin: .625rem auto 0;
+            line-height: 2.6875rem;
+        }
+
+        /* 分享面板 */
+        .sharePanelBox{
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, .8);
+
+            position: fixed;
+            z-index: 100;
+            display: none;
+        }
+
+        .sharePanelBox .sharePanel{
+            width: 21.125rem;
+            max-height: 85%;
+            background-image: url("./assets/share_back.png");
+            background-size: cover;
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: .5rem;
+        }
+
+        .sharePanelBox .sharePanel .share_header{
+            display: flex;
+            justify-content: space-around;
+
+            height: 1.6875rem;
+            margin: 1rem 0;
+        }
+
+        .sharePanelBox .sharePanel .share_header .close{
+            width: 1.875rem;
+            height: 1.6875rem;
+        }
+
+        .sharePanelBox .sharePanel .share_content .data_box{
+            display: flex;
+            justify-content: center;
+            margin-bottom: .75rem;
         }
 
         /* 上半部分 样式 */
@@ -297,11 +373,10 @@
             top: 1.4375rem;
             z-index: 10;
 
-            width: 100%;
+            width: 110%;
             height: 100%;
 
             background-image: url('./assets/information.png');
-            background-repeat: no-repeat;
             background-size: cover;
         }
 
@@ -425,6 +500,57 @@
                 </div>
                 <div class="share">复制</div>
             </a>
+        </div>
+
+        <div class="copy_successful_box">
+            <div class="tips">
+                <p>新闻合集链接复制成功，</p>
+                <p>可粘贴至对话框内，转发好友。</p>
+
+                <div class="close_pop">确认</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sharePanelBox">
+        <div class="sharePanel">
+            <div class="share_header">
+                <p>“ <span style="color: red;">新意，童心</span> ”相关新闻。</p>
+                <img src="./assets/close.png" alt="" srcset="" class="close">
+            </div>
+
+            <div class="share_content">
+                <div class="data_box">
+                    <a href="./article?aid='+data.id+'">
+                        <div class="list-item"><img src="https://lego.chic-mkt.com/news/TID83/Upload/976e17a4-14dc-4f6f-9e51-2db712888ae4.jpg" alt="" class="item-img">
+                            <div class="item-info-search">
+                                <div style="font-size:0.8rem">2024-6-29</div>
+                                <div>乐高集团庆祝《我的世界》十五周年，推出六款全新套装</div>
+                            </div>
+                        </div>
+                    </a> 
+                </div>
+                <div class="data_box">
+                    <a href="./article?aid='+data.id+'">
+                        <div class="list-item"><img src="https://lego.chic-mkt.com/news/TID83/Upload/976e17a4-14dc-4f6f-9e51-2db712888ae4.jpg" alt="" class="item-img">
+                            <div class="item-info-search">
+                                <div style="font-size:0.8rem">2024-6-29</div>
+                                <div>乐高集团庆祝《我的世界》十五周年，推出六款全新套装</div>
+                            </div>
+                        </div>
+                    </a> 
+                </div>
+                <div class="data_box">
+                    <a href="./article?aid='+data.id+'">
+                        <div class="list-item"><img src="https://lego.chic-mkt.com/news/TID83/Upload/976e17a4-14dc-4f6f-9e51-2db712888ae4.jpg" alt="" class="item-img">
+                            <div class="item-info-search">
+                                <div style="font-size:0.8rem">2024-6-29</div>
+                                <div>乐高集团庆祝《我的世界》十五周年，推出六款全新套装</div>
+                            </div>
+                        </div>
+                    </a> 
+                </div>
+            </div>
         </div>
     </div>
 
@@ -602,13 +728,19 @@ function handleSearch() {
         $('.searchMainBg').css('display', 'flex')
         $('.searchMainPlacehoder').css('display', 'flex')
         document.body.style.position='fixed'
+
+
+        $('.searchMain').css('background-image', 'none')
+        $('.searchMain').css('display', 'flex')
+        // 每次点击搜索隐藏 搜索结果面板
+        $('.searchResult').css('display', 'none')
+        $('.copy_successful_box').css('display', 'none')
     })
     $('.searchCancel').on('click', function () {
-
         // 移除样式 合并转发 确定按钮颜色 转发按钮
         $('.checkbox_share').css('display', 'none')
-        $('.searchEnsure').removeClass('submit')
         $('.footer').css('display', 'none')
+        $('.searchEnsure').removeClass('submit')
 
 
         $('.searchMainBg').css('display', 'none')
@@ -620,9 +752,19 @@ function handleSearch() {
 
     })
     $('.searchEnsure').on('click', function () {
+        $('.searchMain').css('background-image', 'none')
         let keyWords = $('.searchInp').val()
         console.log('搜索');
-        updateSearch(keyWords)
+        // updateSearch(keyWords)
+        updateSearch('乐高')
+    })
+
+    $('.close_pop').on('click', function () {
+        $('.searchMainBg').css('display', 'none')
+    })
+
+    $('.close').on('click', function () {
+        $('.sharePanelBox').css('display', 'none')
     })
 }
 function getQueryString (name) {
@@ -652,17 +794,17 @@ function updateSearch(keyword) {
 
     $('.searchResult').empty()
     flag = false
-    // 搜到文章后添加样式
-    $('.searchMain').css('background-image', 'url(https://lego.chic-mkt.com/lego/asset/not_select_back.png)')
-    $('.searchMain').css('background-size', 'cover')
-    $('.searchMain').css('background-attachment', 'fixed')
+
     // 确定按钮样式
     $('.searchEnsure').removeClass('submit')
     // 展示合并转发
     $('.mask').css('display', 'none')
     $('.merge_share').removeClass('hidden')
     $('.selectAll').addClass('hidden')
+
     $('.checkbox_share').css('display', 'none')
+    $('.searchResult').css('display', 'none')
+    $('.footer').css('display', 'none')
 
     $.ajax({
         type:'POST',
@@ -678,11 +820,12 @@ function updateSearch(keyword) {
                     $('.searchResult').css('display', 'none')
                     $('.searchResult').append('<div style="color:#666" class="searchTip">没有搜到相关文章</div>')
                 }else{
-                    $('.searchResult').css('display', 'block')
                     // 搜到文章后添加样式
-                    $('.searchMain').css('background-image', 'url(https://lego.chic-mkt.com/lego/asset/not_select_back.png)')
+                    // $('.searchMain').css('background-image', 'url(https://lego.chic-mkt.com/lego/asset/not_select_back.png)')
+                    $('.searchMain').css('background-image', 'url(./assets/not_select_back.png)')
                     $('.searchMain').css('background-size', 'cover')
-                    $('.searchMain').css('background-attachment', 'fixed')
+                    
+                    $('.searchResult').css('display', 'block')
                     // 确定按钮样式
                     $('.searchEnsure').addClass('submit')
                     // 展示合并转发
@@ -797,7 +940,8 @@ function genCard(data){
 $('.merge_share').on('click', function () {
     // 添加状态判断 若是用户点击过合并转发 则后续上拉加载展示选择框
     flag = true
-    $('.searchMain').css('background-image', 'url(https://lego.chic-mkt.com/lego/asset/select_back.png)')
+    // $('.searchMain').css('background-image', 'url(https://lego.chic-mkt.com/lego/asset/select_back.png)')
+    $('.searchMain').css('background-image', 'url(./assets/select_back.png)')
     $('.mask').css('display', 'block')
     $('.selectAll').removeClass('hidden')
     $('.merge_share').addClass('hidden')
@@ -855,16 +999,6 @@ function shareHref(params) {
     console.log(href);
 
     copyToClipboard(href)
-
-    /* wx.onMenuShareAppMessage({
-        title: "{{ .share.Title }}",
-        desc: "{{ .share.Desc }}",
-        link: "{{ .share.Link }}",
-        imgUrl: "{{ .share.ImgUrl }}",
-        success: function () {
-            console.log("share success")
-        }
-    }); */
 }
 
 function copyToClipboard(str) {
@@ -875,9 +1009,16 @@ function copyToClipboard(str) {
     input.select();
     // 尝试复制
     try {
-        var successful = document.execCommand('copy');
+        document.execCommand('copy');
+
+        $('.searchMain').css('display', 'none')
+        $('.checkbox_share').css('display', 'none')
+        $('.searchResult').css('display', 'none')
+        $('.footer').css('display', 'none')
+
+        $('.copy_successful_box').css('display', 'block')
     } catch (err) {
-        alert('复制链接失败');
+        alert('转发链接失败');
     }
     // 移除输入框
     document.body.removeChild(input);
