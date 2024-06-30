@@ -968,8 +968,12 @@ let ids = ''
 function clickShare(){
     ids = 'isSearch=2'
     // 获取所有选中的id
+    let check = []
     $('input[name="check"]:checked').each(function() {
-        ids += `&id=${$(this).val()}`
+        if(!check.includes($(this).val())){
+            check.push($(this).val())
+            ids += `&id=${$(this).val()}`
+        }
     });
     if($('input[name="check"]:checked').length>0) shareHref()
     else alert('请选择要转发的文章')
