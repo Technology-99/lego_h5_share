@@ -536,7 +536,7 @@
     <div class="sharePanelBox">
         <div class="sharePanel">
             <div class="share_header">
-                <p>“ <span style="color: red;">新意，童心</span> ”相关新闻。</p>
+                <p>“ <span class="share_title" style="color: red;"></span> ”相关新闻。</p>
                 <img src="./assets/close.png" alt="" srcset="" class="close">
             </div>
 
@@ -680,6 +680,7 @@ var swiper = new Swiper('.swiper-container', {
 });
 handleSearch()
 
+let keyWords
 function handleSearch() {
     // 点击搜索框
     $('.searchBtn').on('click', function () {
@@ -713,7 +714,7 @@ function handleSearch() {
     // 确认按钮
     $('.searchEnsure').on('click', function () {
         $('.searchMain').css('background-image', 'none')
-        let keyWords = $('.searchInp').val()
+        keyWords = $('.searchInp').val()
         console.log('搜索');
         updateSearch(keyWords)
     })
@@ -742,10 +743,9 @@ function handleSearch() {
         if(scrollTop > 0 && !scrollFlag){
             scrollFlag = true
             $('.bottom').css('top','1.4375rem')
-
-            getListData()
         }
 
+        getListData()
     })
 }
 function getQueryString (name) {
@@ -860,49 +860,49 @@ let getting =false
 let num = 1;
 
 function getListData(){
-  if(getting){return}
-  //scrollTop是滚动条滚动时，距离顶部的距离
-  var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
-  //windowHeight是可视区的高度
-  var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-  //scrollHeight是滚动条的总高度
-  var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
-  //滚动条到底部的条件
-  //console.log(scrollTop+windowHeight , scrollHeight)
-  if(scrollTop+windowHeight > scrollHeight-200){
-    getting=true
-    let offset = $('.content').children().length
-    num = num + 1
-    // let cid = getQueryString('cid')
-    let cid = 38
-    if (!cid){
-        cid = 0
-    }
-       $.ajax({
-           type:'GET',
-        //    url:'./list-more?page='+num+'&pageSize=5&cid='+cid,
-           url:'https://test-apis.csvw88.com/v/news/list-more?page='+num+'&pageSize=5&cid='+cid,
-           success:function(e){
-               //console.log(e)
-               if(e.code===1000){
-                   //获得数据
-                   if(e.data.list.length===0){
-                       //没有结果
-                       //$('.searchResult').append('<div style="color:#666" class="searchTip">没有搜到相关文章</div>')
-                       getting =true
-                   }else{
-                       for(let i=0;i<e.data.list.length;i++){
+    if(getting){return}
+    //scrollTop是滚动条滚动时，距离顶部的距离
+    var scrollTop = $('.content').scrollTop();
+    //windowHeight是可视区的高度
+    var windowHeight = $('.content').height();
+    //scrollHeight是滚动条的总高度
+    var scrollHeight = $('.content').prop('scrollHeight');
+    //滚动条到底部的条件
+    // console.log(scrollTop, windowHeight, scrollHeight)
+    if(scrollTop+windowHeight >= scrollHeight){
+        getting=true
+        let offset = $('.content').children().length
+        num = num + 1
+        // let cid = getQueryString('cid')
+        let cid = 38
+        if (!cid){
+            cid = 0
+        }
+        $.ajax({
+            type:'GET',
+            //    url:'./list-more?page='+num+'&pageSize=5&cid='+cid,
+            url:'https://test-apis.csvw88.com/v/news/list-more?page='+num+'&pageSize=5&cid='+cid,
+            success:function(e){
+                //console.log(e)
+                if(e.code===1000){
+                    //获得数据
+                    if(e.data.list.length===0){
+                        //没有结果
+                        //$('.searchResult').append('<div style="color:#666" class="searchTip">没有搜到相关文章</div>')
+                        getting =true
+                    }else{
+                        for(let i=0;i<e.data.list.length;i++){
                             $('.content').append(genCardS(e.data.list[i]))
-                       }
-                      getting=false
-                   }
-               }
-           },
-           error:function(){
-                getting=false
-           }
-       })
-  }
+                        }
+                        getting=false
+                    }
+                }
+            },
+            error:function(){
+                    getting=false
+            }
+        })
+    }
 }
 getListData()
 
@@ -979,7 +979,8 @@ function shareHref() {
     console.log(ids);
 
     let href = window.location.protocol+window.location.host+window.location.pathname
-    let newHref = href + '?' + ids
+    let newHref = href + '?' + ids + '&title=' + encodeURIComponent(keyWords)
+
     console.log(newHref);
 
     copyToClipboard(newHref)
@@ -1012,19 +1013,21 @@ function getUrlParams(url) {
     // 通过 ? 分割获取后面的参数字符串
     let urlStr = url.split('?')[1]
     // 创建空对象存储参数
-    let ids = []
+    let ids = [],
+        title=''
     // 再通过 & 将每一个参数单独分割出来
     let paramsArr = urlStr.split('&')
     for(let i = 0,len = paramsArr.length;i < len;i++){
         // 再通过 = 将每一个参数分割为 key:value 的形式
         let [key,value] = paramsArr[i].split('=')
         if(key === 'id') ids.push(Number(value))
+        if(key === 'title') title = decodeURIComponent(value)
     }
-    return ids
+    return {ids,title}
 }
 
 // 调用接口获取搜索的数据
-function getSearchWhereIds(keyword) {
+function getSearchWhereIds(keyword,title) {
     let params = {ids : keyword}
 
     $.ajax({
@@ -1038,6 +1041,7 @@ function getSearchWhereIds(keyword) {
                 //获得数据
                 if(e.data.list.length>0){
                     $('.sharePanelBox').css('display', 'block')
+                    $('.share_title').append(title)
 
                     searchRes = e.data.list
                     if(searchRes.length>8){
@@ -1061,12 +1065,13 @@ function getSearchWhereIds(keyword) {
 }
 
 window.onload = function () {
-    const href = window.location.href
+    let href = window.location.href
+
     // 判断是否是转发过来的
     if(href.includes('isSearch=2')){
         // 获取地址栏参数
-        const urlParams = getUrlParams(href)
-        if(urlParams.length>0) getSearchWhereIds(urlParams)
+        const {ids,title} = getUrlParams(href)
+        if(ids.length>0) getSearchWhereIds(ids,title)
     }
 }
 </script>
