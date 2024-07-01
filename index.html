@@ -688,7 +688,7 @@ var swiper = new Swiper('.swiper-container', {
 });
 handleSearch()
 
-let keyWords
+let keyWords = ''
 function handleSearch() {
     // 点击搜索框
     $('.searchBtn').on('click', function () {
@@ -724,7 +724,7 @@ function handleSearch() {
         $('.searchMain').css('background-image', 'none')
         keyWords = $('.searchInp').val()
         console.log('搜索');
-        updateSearch(keyWords)
+        updateSearch()
     })
 
     // 转发确认按钮
@@ -769,11 +769,25 @@ function highlightTarget(){
 	}
 }
 
-// 调用接口获取搜索的数据
-function updateSearch(keyword) {
-    if(keyword === '') return
+let searchKeywordArr = []
+function trimSpace(keyword){
+    // todo: 添加对于空格的处理
+    let temp1 = keyword.split(" ")
+    searchKeywordArr = []
+    for(let i = 0; i < temp1.length; i++){
+        if (/(\S+)/ig.test(temp1[i])) {
+            searchKeywordArr.push(temp1[i])
+        } else {
+            continue
+        }
+    }
+}
 
-    let params = {title:[keyword]}
+// 调用接口获取搜索的数据
+function updateSearch() {
+    if(keyWords === '') return
+    trimSpace(keyWords)
+    let params = { title: searchKeywordArr }
 
     $('.searchResult').empty()
     flag = false
@@ -793,7 +807,7 @@ function updateSearch(keyword) {
         type:'POST',
         // url:`https://news.lego.cn/v/news/search`, // 正式地址
         url:`https://test-apis.csvw88.com/v/news/search`, // 测试地址
-        contentType:"application/x-www-form-urlencoded",
+        contentType:"application/json",
         data:JSON.stringify(params),
         success:function(e){
             if(e.code===1000){
@@ -924,7 +938,10 @@ function genCardS(data){
 
 // 搜索滚动
 function genCard(data){
-    title = data.title.replace(keyWords,'<span style="color:#FF0000;font-weight:500">'+keyWords+'</span>')
+    let title = data.title
+    searchKeywordArr.forEach(keyWords=>{
+        title = data.title.replace(keyWords,'<span style="color:#FF0000;font-weight:500">'+keyWords+'</span>')
+    })
 
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
     if(flag) $('.mask').css('display', 'block')
@@ -1035,14 +1052,17 @@ function getUrlParams(url) {
         // 再通过 = 将每一个参数分割为 key:value 的形式
         let [key,value] = paramsArr[i].split('=')
         if(key === 'id') ids.push(Number(value))
-        if(key === 'title') title = decodeURIComponent(value)
+        if(key === 's'){
+            title = decodeURIComponent(value)
+            trimSpace(title)
+        } 
     }
     return {ids,title}
 }
 
 // 调用接口获取搜索的数据
 function getSearchWhereIds(keyword,title) {
-    let params = {ids : keyword}
+    let params = {ids : keyword }
 
     $.ajax({
         type:'POST',
