@@ -916,9 +916,11 @@ function genCardS(data){
 
 // 搜索滚动
 function genCard(data){
+    title = data.title.replace(keyWords,'<span style="color:#FF0000;font-weight:500">'+keyWords+'</span>')
+
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
     if(flag) $('.mask').css('display', 'block')
-    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div class="articleTitle">'+data.title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"> <img src="https://lego.chic-mkt.com/lego/asset/unchecked.png" class="unchecked unchecked'+data.id+'"> <img src="https://lego.chic-mkt.com/lego/asset/checked.png" class="checked checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox checkbox'+data.id+'" /> </div> </div></div>')
+    return $('<div class="data_box"><a href="./article?aid='+data.id+'"><div class="list-item-search"><img src="'+data.cover+'" alt="" class="item-img"><div class="item-info-search"><div style="font-size:0.8rem">'+date+'</div><div class="articleTitle">'+title+'</div></div></div></a> <div class="mask" onclick="handleClick('+data.id+')"> <div class="check_icon_box"> <img src="https://lego.chic-mkt.com/lego/asset/unchecked.png" class="unchecked unchecked'+data.id+'"> <img src="https://lego.chic-mkt.com/lego/asset/checked.png" class="checked checked'+data.id+' hidden"> <input type="checkbox" name="check" value="'+data.id+'" class="checkbox checkbox'+data.id+'" /> </div> </div></div>')
 }
 
 // 点击合并转发
