@@ -55,8 +55,8 @@
     <style>
         .target{
             background-color: #006CB7 !important;
-            color: white;
-            font-weight: bold;
+            color: white !important;
+            font-weight: bold !important;
             border: none !important;
         }
 
@@ -941,7 +941,7 @@ function genCardS(data){
 function genCard(data){
     let title = data.title
     searchKeywordArr.forEach(keyWords=>{
-        title = data.title.replace(keyWords,'<span style="color:#FF0000;font-weight:500">'+keyWords+'</span>')
+        title = title.replace(keyWords,'<span style="color:#FF0000;font-weight:500">'+keyWords+'</span>')
     })
 
     let date=new Date(data.releaseAt * 1000).toLocaleDateString().replaceAll("/", "-")
@@ -1010,8 +1010,25 @@ function clickShare(){
 function shareHref() {
     console.log(ids);
 
-    let href = window.location.origin+window.location.pathname
-    let newHref = href + '?' + ids + '&s=' + encodeURIComponent(keyWords)
+    // 协议 域名 端口 地址
+    let href = window.location.href.split('?')[0]
+
+    // 搜索条件
+    let url = window.location.href.split('?')[1]
+
+    let cid = ''
+
+    let newHref
+
+    if(url){
+        let searchArr = url.split('&')
+        for (let i = 0; i < searchArr.length; i++) {
+            let [key,value] = searchArr[i].split('=')
+            if(key === 'cid') cid = searchArr[i]+'&'
+        }
+    }
+
+    newHref = href + '?' + cid + ids + '&s=' + encodeURIComponent(keyWords)
 
     console.log(newHref);
 
