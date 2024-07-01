@@ -876,6 +876,25 @@ $('.searchResult')[0].onscroll = function(){
   }
 }
 
+
+$('.share_content')[0].onscroll = function(){
+  var scrollTop = $('.share_content')[0].scrollTop
+  var windowHeight = $('.share_content')[0].clientHeight
+  var scrollHeight = $('.share_content')[0].scrollHeight||document.body.scrollHeight;
+  if(scrollTop+windowHeight > scrollHeight-200){
+    let offset = $('.share_content').children().length
+    if(searchRes.length-offset>8){
+        for(let i=offset;i<offset+8;i++){
+            $('.share_content').append(genCard(searchRes[i]))
+        }
+    }else if(searchRes.length-offset>0){
+        for(let i=offset;i<searchRes.length;i++){
+            $('.share_content').append(genCard(searchRes[i]))
+        }
+    }
+  }
+}
+
 $('.searchMainBg').on('touchmove', function (e) {
     e.stopPropagation()
 })
