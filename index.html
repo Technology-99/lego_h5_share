@@ -673,7 +673,7 @@ let flag = false // 点击合并转发
 
 var swiper = new Swiper('.swiper-container', {
     autoplay:true,
-    loop:true,
+    // loop:true,
     slidesPerView:'auto', // 设置slider容器能够同时显示的slides数量
     centeredSlides:true, // 居中幻灯片
     spaceBetween:12, // 设置slide之间的距离
@@ -765,7 +765,7 @@ function highlightTarget(){
 function updateSearch(keyword) {
     if(keyword === '') return
 
-    let params = {title:keyword}
+    let params = {title:[keyword]}
 
     $('.searchResult').empty()
     flag = false
@@ -982,8 +982,8 @@ function clickShare(){
 function shareHref() {
     console.log(ids);
 
-    let href = window.location.protocol+window.location.host+window.location.pathname
-    let newHref = href + '?' + ids + '&title=' + encodeURIComponent(keyWords)
+    let href = window.location.origin+window.location.pathname
+    let newHref = href + '?' + ids + '&s=' + encodeURIComponent(keyWords)
 
     console.log(newHref);
 
